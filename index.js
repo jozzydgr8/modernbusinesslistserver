@@ -9,7 +9,8 @@ const app = express();
 app.use(cors())
 app.use(express.json());
 
-
+//route middleware
+app.use('/country', require('./routes/countryRoute'))
 
 //connect db
 mongoose.connect(process.env.mongoose_uri)
