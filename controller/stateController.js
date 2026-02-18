@@ -2,31 +2,34 @@ const State = require('../Schema/stateSchema');
 const Country = require('../Schema/countrySchema')
 
 
-const getState = async(req,res)=>{
-    try{
-        const fetchStates = await State.find({});
-        res.status(200).json(fetchStates)
-    }catch(error){
-        res.status(400).json(error.message)
-    }
-}
+const getStatesByCountry = async (req, res) => {
+  try {
+    const { countryId } = req.params;
+
+    const states = await State.find({ countryId }).populate('countryId', 'name');
+    res.status(200).json(states);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
 
 const createState = async(req,res)=>{
-    const{country, name} = req.body;
+    const{name} = req.body;
+    const {countryId} = req.params;
     try{
-        country = country.trim().toLowerCase();
-        const findCountry = await Country.findOne({name:country});
+        const findCountry = await Country.findById(countryId);
+;
         if (!findCountry) {
         return res.status(404).json({ message: "Country not found" });
         }
         
-        const state = await State.create({countryId:findCountry.id, name})
+        const state = await State.create({countryId:findCountry._id, name})
 
-        res.status(200).json(state)
+        res.status(201).json(state)
 
     }catch(error){
         res.status(400).json(error.message)
     }
 }
 
-module.exports = {getState, createState}
+module.exports = {getStatesByCountry, createState}

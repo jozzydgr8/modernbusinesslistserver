@@ -8,7 +8,7 @@ const getCountries = async(req,res)=>{
             name: country.name,
             currency: country.currency,
             iso: country.iso,
-            slug: country.iso.toLowerCase() // generate slug from ISO
+            slug: country.iso.toLowerCase() 
         }));
 
     res.status(200).json(countriesWithSlug);
@@ -22,7 +22,7 @@ const createCountry = async(req,res)=>{
     const {name, currency, iso} = req.body;
     try{
         const country = await Country.create({name, currency, iso});
-        res.status(200).json(country)
+        res.status(201).json(country)
     }catch(error){
         res.status(400).json(error.message)
     }

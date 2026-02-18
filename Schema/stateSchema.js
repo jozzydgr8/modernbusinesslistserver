@@ -19,6 +19,6 @@ const stateSchema = new mongoose.Schema({
   },
 }, {timestamps:true})
 
-stateSchema.index({ name: 1, country: 1 }, { unique: true });
+stateSchema.index({ name: 1, countryId: 1 }, { unique: true });
 
 module.exports=mongoose.model('State', stateSchema);
