@@ -8,7 +8,11 @@ const categorySchema = mongoose.Schema({
         unique:true,
         trim: true,
         minlength: [2, "Category name must be at least 2 characters"]
-    }
+    },
+    businessCount: {
+    type: Number,
+    default: 0
+  },
 },{timestamps:true})
 
-module.exports=mongoose.model('Categories',categorySchema)
+module.exports=mongoose.model('Category',categorySchema)

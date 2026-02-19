@@ -24,4 +24,5 @@ const createCategory = async(req,res)=>{
     }
 }
 
+
 module.exports={getCategories, createCategory}

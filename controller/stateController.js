@@ -1,10 +1,15 @@
 const State = require('../Schema/stateSchema');
-const Country = require('../Schema/countrySchema')
+const Country = require('../Schema/countrySchema');
+const mongoose = require('mongoose');
 
 
 const getStatesByCountry = async (req, res) => {
   try {
     const { countryId } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(countryId)) {
+                return res.status(400).json({ message: "Invalid category ID" });
+        }
 
     const states = await State.find({ countryId }).populate('countryId', 'name');
     res.status(200).json(states);
@@ -14,11 +19,15 @@ const getStatesByCountry = async (req, res) => {
 };
 
 const createState = async(req,res)=>{
-    const{name} = req.body;
-    const {countryId} = req.params;
+ 
     try{
+      const{name} = req.body;
+      const {countryId} = req.params;
+      if (!mongoose.Types.ObjectId.isValid(countryId)) {
+          return res.status(400).json({ message: "Invalid Country ID" });
+      }
         const findCountry = await Country.findById(countryId);
-;
+
         if (!findCountry) {
         return res.status(404).json({ message: "Country not found" });
         }
@@ -30,7 +39,7 @@ const createState = async(req,res)=>{
     }catch(error){
        if (error.code === 11000) {
         return res.status(400).json({
-            message: "Category already exists"
+            message: "State already exists"
         });
     }
         res.status(400).json(error.message)
