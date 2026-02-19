@@ -5,7 +5,8 @@ const stateSchema = new mongoose.Schema({
         type:String,
         required:true,
         trim:true,
-        lowercase:true
+        lowercase:true,
+        minlength: [2, "Category name must be at least 2 characters"]
     },
     countryId: {
     type: mongoose.Schema.Types.ObjectId,

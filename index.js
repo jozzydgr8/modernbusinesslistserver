@@ -11,6 +11,7 @@ app.use(express.json());
 
 //route middleware
 app.use('/countries', require('./routes/countryRoute'));
+app.use('/categories',require('./routes/categoryRoute'));
 
 //connect db
 mongoose.connect(process.env.mongoose_uri)

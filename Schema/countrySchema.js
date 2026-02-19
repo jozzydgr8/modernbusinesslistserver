@@ -6,7 +6,8 @@ const countrySchema = new mongoose.Schema({
         required:true,
         trim: true,
         unique:true,
-        lowercase:true
+        lowercase:true,
+        minlength: [2, "Category name must be at least 2 characters"]
     },
     currency:{
         type:String,

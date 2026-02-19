@@ -28,6 +28,11 @@ const createState = async(req,res)=>{
         res.status(201).json(state)
 
     }catch(error){
+       if (error.code === 11000) {
+        return res.status(400).json({
+            message: "Category already exists"
+        });
+    }
         res.status(400).json(error.message)
     }
 }
