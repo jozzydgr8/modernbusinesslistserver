@@ -27,21 +27,23 @@ const getCountry = async (req, res) => {
         }
       );
 
-    const country = response.data.country?.toUpperCase() || null;
+  const country = response.data.country?.toUpperCase() || "NG";
 
-    
-    if (!country) {
-      return res.json({ country: null });
-    }
+  let matchCountry = await Country.findOne({ iso: country });
+
+  // If not found, fallback to NG from DB
+  if (!matchCountry) {
+    matchCountry = await Country.findOne({ iso: "NG" });
+  }
+
+  // Still not found? return null safely
+  if (!matchCountry) {
+    return res.json({ countryId: null });
+  }
+
+  return res.json({ countryId: matchCountry._id });
 
 
-     const matchCountry = await Country.findOne({ iso: country });
-
-    if (!matchCountry) {
-      return res.json({ country: "NG" });
-    }
-
-    return res.json({ countryId:matchCountry._id });
 
   } catch (error) {
     console.error("Error:", error.response?.data || error.message);
