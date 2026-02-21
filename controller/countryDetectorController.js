@@ -1,5 +1,5 @@
 const axios = require("axios");
-
+const Country = require('../Schema/countrySchema');
 const getCountry = async (req, res) => {
   try {
     const forwarded = req.headers["x-forwarded-for"];
@@ -29,11 +29,23 @@ const getCountry = async (req, res) => {
 
     const country = response.data.country?.toUpperCase() || null;
 
-    return res.json({ country });
+    
+    if (!country) {
+      return res.json({ country: null });
+    }
+
+
+     const matchCountry = await Country.findOne({ iso: country });
+
+    if (!matchCountry) {
+      return res.json({ country: "NG" });
+    }
+
+    return res.json({ countryId:matchCountry._id });
 
   } catch (error) {
     console.error("Error:", error.response?.data || error.message);
-    return res.status(500).json({ error: error.message });
+    return res.status(500).json({error: "Failed to determine country" });
   }
 };
 
