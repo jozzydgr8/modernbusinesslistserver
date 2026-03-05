@@ -15,6 +15,11 @@ const countrySchema = new mongoose.Schema({
         trim: true,
         uppercase:true,
     },
+    
+    businessCount: {
+    type: Number,
+    default: 0
+  },
     iso:{
         type:String,
         required:true,
