@@ -13,6 +13,8 @@ app.use(express.json());
 app.use('/countries', require('./routes/countryRoute'));
 app.use('/categories',require('./routes/categoryRoute'));
 app.use('/getCountry',require('./routes/countryDetectorRoute'));
+app.use('/user', require('./routes/userRoute'));
+
 
 //connect db
 mongoose.connect(process.env.mongoose_uri)
