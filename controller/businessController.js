@@ -11,7 +11,7 @@ const getBusiness = async (req,res)=>{
         if(!mongoose.Types.ObjectId.isValid(subCategoryId)){
            return res.status(400).json({message:'invalid sub-categoryID'})
         }
-        const data = await Business.find({subCategoryId}).populate('subCategory','name');
+        const data = await Business.find({subCategoryId}).populate('subCategoryId','name');
         res.status(200).json(data);
         
     }catch(error){
@@ -26,8 +26,32 @@ const addBusiness = async (req, res) => {
     try {
         session.startTransaction();
 
-        const {name, description, country, state, address, city, phone, website, email, user} = req.body;
+        const {name, description, country, state, address, city, phone, website, email} = req.body;
         const {subCategoryId} = req.params;
+        const user = req.user;
+       
+        if (!user) {
+            await session.abortTransaction();
+            session.endSession();
+            return res.status(400).json({ message: 'user does not exist' });
+        }
+        const checkCountry = await Country.findById(country).session(session);
+        const checkState = await State.findById(state).session(session);
+      
+        if (!name || !checkCountry || !checkState || !address) {
+        await session.abortTransaction();
+        session.endSession();
+        return res.status(400).json({ message: "Missing required fields" });
+        }
+
+        
+        const checkUserBusiness = await Business.findOne({user:user._id}).session(session);
+        if (checkUserBusiness) {
+        await session.abortTransaction();
+        session.endSession();
+        return res.status(400).json({ message: 'user already has a business' });
+        }
+        
 
         const findSubCategory = await SubCategory
             .findById(subCategoryId)
@@ -35,14 +59,16 @@ const addBusiness = async (req, res) => {
 
         if(!findSubCategory){
             await session.abortTransaction();
+            session.endSession();
             return res.status(400).json({message:'SubCategory does not exist'});
         }
 
-        const findCategory = await Category
-            .findById(findSubCategory.categoryId)
-            .session(session);
+        // const findCategory = await Category
+        //     .findById(findSubCategory.categoryId)
+        //     .session(session);
 
-        const createBusiness = await Business.create([{
+        const createBusiness = await Business.create([
+            {
             name,
             description,
             country,
@@ -53,8 +79,9 @@ const addBusiness = async (req, res) => {
             website,
             email,
             subCategoryId: findSubCategory._id,
-            user
-        }], { session });
+            user:user._id
+        },
+        ], { session });
 
         // increment counters
         await SubCategory.findByIdAndUpdate(
