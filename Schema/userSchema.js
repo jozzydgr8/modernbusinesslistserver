@@ -51,8 +51,6 @@ UserSchema.statics.signUser = async function ({email, password}){
     }
     if(!validator.isEmail(email)){
         throw Error('invalid email')
-    }if(!validator.isStrongPassword(password)){
-        throw Error('password not strong enough')
     }
     try{
         const user = await this.findOne({email:email})
@@ -67,7 +65,7 @@ UserSchema.statics.signUser = async function ({email, password}){
 
 
     }catch(error){
-        throw Error(error)
+        throw error
     }
 
 }
