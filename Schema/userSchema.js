@@ -15,7 +15,11 @@ const UserSchema = new Schema({
     admin:{
         type:Boolean,
         default:false
-    }
+    },
+    resetToken: String,       
+    resetTokenExpires: Date 
+
+   
 })
 UserSchema.statics.createUser = async function({email, password}){
     if(!email || !password){
