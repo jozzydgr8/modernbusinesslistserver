@@ -21,13 +21,20 @@ const UserSchema = new Schema({
 
    
 })
+
 UserSchema.statics.createUser = async function({email, password}){
     if(!email || !password){
         throw Error('Fields required')
     }
     if(!validator.isEmail(email)){
         throw Error('invalid email')
-    }if(!validator.isStrongPassword(password)){
+    }if(!validator.isStrongPassword(password, {
+        minLength: 8,
+        minLowercase: 1,
+        minUppercase: 1,
+        minNumbers: 1,
+        minSymbols: 0
+    })){
         throw Error('password not strong enough')
     }
     try{
