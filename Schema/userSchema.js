@@ -41,7 +41,7 @@ UserSchema.statics.createUser = async function({email, password}){
         return user; 
 
     }catch(error){
-        throw Error(error)
+        throw error
     }
 }
 
