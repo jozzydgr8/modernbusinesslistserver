@@ -5,19 +5,37 @@ const Category = require('../Schema/categorySchema');
 const State = require('../Schema/stateSchema');
 const Country = require('../Schema/countrySchema');
 
-const getBusiness = async (req,res)=>{
-    try{
-        const {subCategoryId} = req.params;
-        if(!mongoose.Types.ObjectId.isValid(subCategoryId)){
-           return res.status(400).json({message:'invalid sub-categoryID'})
-        }
-        const data = await Business.find({subCategoryId}).populate('subCategoryId','name');
-        res.status(200).json(data);
-        
-    }catch(error){
-        res.status(500).json(error.message)
+const getBusiness = async (req, res) => {
+  try {
+    const { subCategoryId } = req.params;
+    const { page = 1, limit = 10 } = req.query;
+
+    if (!mongoose.Types.ObjectId.isValid(subCategoryId)) {
+      return res.status(400).json({ message: 'invalid sub-categoryID' });
     }
-}
+
+    const skip = (Number(page) - 1) * Number(limit);
+
+    const [data, total] = await Promise.all([
+      Business.find({ subCategoryId })
+        .populate('subCategoryId', 'name')
+        .skip(skip)
+        .limit(Number(limit)),
+
+      Business.countDocuments({ subCategoryId })
+    ]);
+
+    res.status(200).json({
+      data,
+      total,
+      page: Number(page),
+      pages: Math.ceil(total / Number(limit)),
+    });
+
+  } catch (error) {
+    res.status(500).json(error.message);
+  }
+};
 
 
 const addBusiness = async (req, res) => {
