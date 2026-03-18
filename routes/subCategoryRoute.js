@@ -6,6 +6,6 @@ router.get('/', getSubCategories);
 router.post('/',createSubCategory);
 
 //nest routing for businesses
-router.use('/:subCategoryId/business', businessRoute)
+router.use('/:subCategoryId/:countryId/business', businessRoute)
 
 module.exports=router

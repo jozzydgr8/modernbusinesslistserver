@@ -7,17 +7,20 @@ const Country = require('../Schema/countrySchema');
 
 const getBusiness = async (req, res) => {
   try {
-    const { subCategoryId } = req.params;
+    const { subCategoryId, countryId } = req.params;
     const { page = 1, limit = 10 } = req.query;
 
     if (!mongoose.Types.ObjectId.isValid(subCategoryId)) {
+      return res.status(400).json({ message: 'invalid sub-categoryID' });
+    }
+    if (!mongoose.Types.ObjectId.isValid(countryId)) {
       return res.status(400).json({ message: 'invalid sub-categoryID' });
     }
 
     const skip = (Number(page) - 1) * Number(limit);
 
     const [data, total] = await Promise.all([
-      Business.find({ subCategoryId })
+      Business.find({ subCategoryId,country:countryId })
         .populate('subCategoryId', 'name')
         .skip(skip)
         .limit(Number(limit)),
