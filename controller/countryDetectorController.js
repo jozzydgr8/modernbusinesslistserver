@@ -41,7 +41,7 @@ const getCountry = async (req, res) => {
     return res.json({ countryId: null });
   }
 
-  return res.json({ countryId: matchCountry._id });
+  return res.json({ countryId: matchCountry._id, name:matchCountry.name });
 
 
 
