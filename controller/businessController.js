@@ -32,7 +32,7 @@ const getBusiness = async (req, res) => {
     res.status(200).json({
       data,
       total,
-      country,
+      country:country.name,
       page: Number(page),
       pages: Math.ceil(total / Number(limit)),
     });
