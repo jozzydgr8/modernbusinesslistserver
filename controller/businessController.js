@@ -26,7 +26,7 @@ const getBusiness = async (req, res) => {
         .limit(Number(limit)),
 
       Business.countDocuments({ subCategoryId }),
-      Country.findById(countryId).populate('name')
+      Country.findById(countryId).select('name')
     ]);
 
     res.status(200).json({
