@@ -19,18 +19,20 @@ const getBusiness = async (req, res) => {
 
     const skip = (Number(page) - 1) * Number(limit);
 
-    const [data, total] = await Promise.all([
+    const [data, total, country] = await Promise.all([
       Business.find({ subCategoryId,country:countryId })
         .populate('subCategoryId', 'name')
         .skip(skip)
         .limit(Number(limit)),
 
-      Business.countDocuments({ subCategoryId })
+      Business.countDocuments({ subCategoryId }),
+      Country.findOnebyId(countryId).populate('name')
     ]);
 
     res.status(200).json({
       data,
       total,
+      country,
       page: Number(page),
       pages: Math.ceil(total / Number(limit)),
     });
