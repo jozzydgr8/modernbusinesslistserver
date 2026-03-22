@@ -37,7 +37,7 @@ const getBusiness = async (req, res) => {
       page: Number(page),
       pages: Math.ceil(total / Number(limit)),
       limit:Number(limit),
-      subcategory
+      subcategory:subcategory.name
     });
 
   } catch (error) {
