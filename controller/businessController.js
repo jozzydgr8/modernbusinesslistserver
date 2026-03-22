@@ -19,14 +19,15 @@ const getBusiness = async (req, res) => {
 
     const skip = (Number(page) - 1) * Number(limit);
 
-    const [data, total, country] = await Promise.all([
+    const [data, total, country,subcategory] = await Promise.all([
       Business.find({ subCategoryId,country:countryId })
         .populate('subCategoryId', 'name')
         .skip(skip)
         .limit(Number(limit)),
 
       Business.countDocuments({ subCategoryId }),
-      Country.findById(countryId).select('name')
+      Country.findById(countryId).select('name'),
+      SubCategory.findById(subCategoryId)
     ]);
 
     res.status(200).json({
@@ -35,7 +36,8 @@ const getBusiness = async (req, res) => {
       country:country.name,
       page: Number(page),
       pages: Math.ceil(total / Number(limit)),
-      limit:Number(limit)
+      limit:Number(limit),
+      subcategory
     });
 
   } catch (error) {
