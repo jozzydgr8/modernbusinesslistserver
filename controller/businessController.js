@@ -45,6 +45,36 @@ const getBusiness = async (req, res) => {
   }
 };
 
+const getSingleBusiness = async (req, res) => {
+  try {
+    const { businessId } = req.params;
+
+    // Validate ID
+    if (!mongoose.Types.ObjectId.isValid(businessId)) {
+      return res.status(400).json({ message: 'Invalid business ID' });
+    }
+
+    // Fetch business
+    const business = await Business.findById(businessId)
+      .populate('subCategoryId', 'name')
+      .populate('country', 'name');
+
+    // Check if found
+    if (!business) {
+      return res.status(404).json({ message: 'Business not found' });
+    }
+
+    res.status(200).json({
+    data: business,
+    subcategory: business.subCategoryId?.name,
+    country: business.country?.name
+});
+
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 
 const addBusiness = async (req, res) => {
     const session = await mongoose.startSession();
@@ -147,4 +177,4 @@ const addBusiness = async (req, res) => {
         res.status(500).json(error.message);
     }
 };
-module.exports={getBusiness, addBusiness}
+module.exports={getBusiness, addBusiness, getSingleBusiness}
