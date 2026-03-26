@@ -48,6 +48,7 @@ const getBusiness = async (req, res) => {
 const getSingleBusiness = async (req, res) => {
   try {
     const { businessId } = req.params;
+   
 
     // Validate ID
     if (!mongoose.Types.ObjectId.isValid(businessId)) {

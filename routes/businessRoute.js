@@ -3,6 +3,6 @@ const {getBusiness, addBusiness, getSingleBusiness} = require('../controller/bus
 const authenticator = require('../middleware/authenticator')
 
 router.get('/',getBusiness);
-router.get(':businessId', getSingleBusiness)
+router.get('/:businessId', getSingleBusiness)
 router.post('/', authenticator, addBusiness);
 module.exports=router;
