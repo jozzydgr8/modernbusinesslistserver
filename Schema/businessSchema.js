@@ -33,7 +33,7 @@ const businessSchema = new mongoose.Schema(
     },
 
     address: String,
-    city: String,
+  
 
     // Category
 
