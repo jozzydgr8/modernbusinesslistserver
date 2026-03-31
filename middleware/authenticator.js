@@ -10,7 +10,7 @@ const authenticator = async (req, res, next) => {
 
   try {
     const token = authorization.split(' ')[1];
-    const decoded = jwt.verify(token, process.env.JWTSECRET);
+    const decoded = jwt.verify(token, process.env.jwtSecret);
 
     const user = await userModel.findById(decoded._id).select('_id email admin');;
 
